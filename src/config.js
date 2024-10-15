@@ -6,6 +6,8 @@ module.exports = {
   DB_FILE: process.env.DB_FILE || "./users.db",
   VIOLATIONS_DB_PATH:
     process.env.VIOLATIONS_DB_PATH || "/home/vovanhau/toxic/users.db",
-  DISCORD_TOKEN: process.env.DISCORD_TOKEN,
-  USERS_DB_PATH: process.env.USERS_DB_PATH || "/home/vovanhau/disscord/users.db",
+  DISCORD_TOKEN:
+    process.env.DISCORD_TOKEN ||,
+  USERS_DB_PATH:
+    process.env.USERS_DB_PATH || "/home/vovanhau/disscord/users.db",
 };

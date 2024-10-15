@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { db } = require("../database");
 const config = require("../config");
-const logger = require("../logger");
+const console = require("../console");
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    logger.warn("Registration attempt with missing username or password");
+    console.warn("Registration attempt with missing username or password");
     return res
       .status(400)
       .json({ success: false, message: "Username and password are required" });
@@ -23,13 +23,13 @@ router.post("/register", async (req, res) => {
       [username],
       async (err, row) => {
         if (err) {
-          logger.error("Error checking username", { error: err.message });
+          console.error("Error checking username", { error: err.message });
           return res
             .status(500)
             .json({ success: false, message: "Error checking username" });
         }
         if (row) {
-          logger.warn("Registration attempt with existing username", {
+          console.warn("Registration attempt with existing username", {
             username,
           });
           return res
@@ -44,12 +44,12 @@ router.post("/register", async (req, res) => {
           [username, hashedPassword, "user"],
           (err) => {
             if (err) {
-              logger.error("Error registering user", { error: err.message });
+              console.error("Error registering user", { error: err.message });
               return res
                 .status(500)
                 .json({ success: false, message: "Error registering user" });
             }
-            logger.info("User registered successfully", { username });
+            console.info("User registered successfully", { username });
             res
               .status(201)
               .json({ success: true, message: "User registered successfully" });
@@ -58,7 +58,7 @@ router.post("/register", async (req, res) => {
       }
     );
   } catch (error) {
-    logger.error("Server error during registration", { error: error.message });
+    console.error("Server error during registration", { error: error.message });
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
@@ -77,13 +77,13 @@ router.post("/login", (req, res) => {
     [username],
     async (err, user) => {
       if (err) {
-        logger.error("Error during login", { error: err.message });
+        console.error("Error during login", { error: err.message });
         return res
           .status(500)
           .json({ success: false, message: "Error during login" });
       }
       if (!user) {
-        logger.warn("Login attempt with non-existent username", { username });
+        console.warn("Login attempt with non-existent username", { username });
         return res
           .status(401)
           .json({ success: false, message: "Invalid username or password" });
@@ -91,7 +91,7 @@ router.post("/login", (req, res) => {
 
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
-        logger.warn("Login attempt with incorrect password", { username });
+        console.warn("Login attempt with incorrect password", { username });
         return res
           .status(401)
           .json({ success: false, message: "Invalid username or password" });
@@ -103,7 +103,7 @@ router.post("/login", (req, res) => {
         { expiresIn: "60m" }
       );
 
-      logger.info("User logged in successfully", { username });
+      console.info("User logged in successfully", { username });
       res.json({ success: true, token });
     }
   );
