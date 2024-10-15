@@ -1,6 +1,6 @@
 const express = require("express");
 const { violationsDb } = require("../database");
-const console = require("../console");
+// const console = require("../console");
 
 const router = express.Router();
 

@@ -6,6 +6,12 @@ const client = new Client({
 });
 let totalMembers = 0;
 let isReady = false;
+let readyPromiseResolve;
+
+console.info("Creating readyPromise");
+const readyPromise = new Promise((resolve) => {
+  readyPromiseResolve = resolve;
+});
 
 // Đăng nhập bot với token
 client.login(config.DISCORD_TOKEN).catch((error) => {
@@ -16,6 +22,10 @@ client.login(config.DISCORD_TOKEN).catch((error) => {
 client.once("ready", () => {
   console.info("Discord bot is ready!");
   isReady = true; // Đánh dấu bot đã sẵn sàng
+  if (readyPromiseResolve) {
+    console.info("Resolving readyPromise");
+    readyPromiseResolve(); // Giải phóng Promise khi bot đã sẵn sàng
+  }
   updateMemberCount();
 });
 
@@ -34,5 +44,10 @@ function updateMemberCount() {
 
 setInterval(updateMemberCount, 5 * 60 * 1000);
 
-// Xuất client và biến isReady
-module.exports = { getTotalMembers: () => totalMembers, client, isReady };
+// Xuất client, biến isReady và Promise
+module.exports = {
+  getTotalMembers: () => totalMembers,
+  client,
+  isReady,
+  readyPromise,
+};

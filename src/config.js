@@ -11,3 +11,5 @@ module.exports = {
   USERS_DB_PATH:
     process.env.USERS_DB_PATH || "/home/vovanhau/disscord/users.db",
 };
+
+console.log("Discord Token:", process.env.DISCORD_TOKEN);

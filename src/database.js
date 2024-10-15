@@ -1,7 +1,7 @@
 const sqlite3 = require("sqlite3").verbose();
 const fs = require("fs");
 const config = require("./config");
-const console = require("./console");
+// const console = require("./console");
 
 const dbExists = fs.existsSync(config.DB_FILE);
 
